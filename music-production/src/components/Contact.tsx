@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import formSchema from "@/lib/validations/form";
 import type { FormSchemaData } from "@/lib/validations/form";
+import { toast }  from "sonner";
 import {
   Form,
   FormControl,
@@ -14,6 +15,14 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { useRouter } from "next/navigation";
+
+export {};
+declare global {
+  interface Window {
+    dataLayer: Array<Record<string, any>>[];
+  }
+}
 
 const WhatsAppIcon = () => (
   <svg className="w-6 h-6" viewBox="0 0 24 24" fill="currentColor">
@@ -22,6 +31,7 @@ const WhatsAppIcon = () => (
 );
 
 const Contact = () => {
+  const router = useRouter();
   const form = useForm<FormSchemaData>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -37,14 +47,14 @@ const Contact = () => {
     console.log("Data submitted:", data);
     // Tracking
     if (typeof window !== "undefined" && window.dataLayer) {
-      window.dataLayer.push({
+      (window as any).dataLayer.push({
         event: "form_submission",
         formType: "contact",
         timestamp: new Date().toISOString(),
       });
     }
 
-    // Build mailto link
+    // Build mailto links
     const subject = encodeURIComponent(`New Project Inquiry from ${data.name}`);
     const body = encodeURIComponent(
       `Name: ${data.name}\nEmail: ${data.email}\n\nProject Details:\n${data.message}`
@@ -62,15 +72,23 @@ const Contact = () => {
       })
     }).then((response)=>{
       if (response.ok) {
-        alert("Email sent successfully!");
+        router.push('/thank-you');
         form.reset();
       }else {
-        alert("Failed to send email. Please try again later.");
+        toast.error( "Failed to send email. Please try again later.");
+        console.log("Failed to send email. Please try again later.");
       }
     })
   }
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent("Hi Gabriel, I'd like to talk about my music project!");
+    if (typeof window !== "undefined" && window.dataLayer) {
+      (window as any).dataLayer.push({
+        event: "whatsapp_click",
+        formType: "contact",
+        timestamp: new Date().toISOString(),
+      });
+    }
     window.open(`https://wa.me/5527995096289?text=${message}`, "_blank");
   };
 

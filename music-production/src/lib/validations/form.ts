@@ -9,12 +9,12 @@ const formSchema = z.object({
         .max(100,"Name too long")
         .trim(),
     email:
-        z.string().email({message: "PLease provide a valid email address"}).trim(),
+        z.string().email({message: "Please provide a valid email address"}).trim(),
     message:
       z.string().min(10,"Please provide more details about your project")
       .max(1500, "Message too long")
       .trim()
-      .refine((val)=> !val.includes("<") && !val.includes(">"),{message: "Invalid characters in message"}),
+      .refine((val)=> !val.includes("<") && !val.includes(">"),{message: "Invalid character in message. < and > are not allowed."}),
     })
 
 export default formSchema
