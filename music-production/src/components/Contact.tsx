@@ -49,7 +49,9 @@ const Contact = () => {
     if (typeof window !== "undefined" && window.dataLayer) {
       (window as any).dataLayer.push({
         event: "form_submission",
-        formType: "contact",
+        formType: "contact_international",
+        user_language: navigator.language,
+        user_timezone: Intl.DateTimeFormat().resolvedOptions().timeZone,
         timestamp: new Date().toISOString(),
       });
     }
@@ -59,26 +61,31 @@ const Contact = () => {
     const body = encodeURIComponent(
       `Name: ${data.name}\nEmail: ${data.email}\n\nProject Details:\n${data.message}`
     );
-
-    fetch(`/api/send`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        name: data.name,
-        email: data.email,
-        message: data.message,
-      })
-    }).then((response)=>{
-      if (response.ok) {
-        router.push('/thank-you');
-        form.reset();
-      }else {
-        toast.error( "Failed to send email. Please try again later.");
-        console.log("Failed to send email. Please try again later.");
-      }
+    try {
+      fetch(`/api/send`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name: data.name,
+          email: data.email,
+          message: data.message,
+        })
+      }).then((response)=>{
+        if (response.ok) {
+          router.push('/thank-you');
+          form.reset();
+        }else {
+          toast.error( "Failed to send email. Please try WhatsApp.");
+          console.log("Failed to send email. Response:", response);
+        }
     })
+    } catch (error) {
+        toast.error( "An error occurred. Please try WhatsApp.");
+        console.log("An error occurred:", error);
+    }
+    
   }
   const handleWhatsAppClick = () => {
     const message = encodeURIComponent("Hi Gabriel, I'd like to talk about my music project!");
@@ -131,9 +138,9 @@ const Contact = () => {
             </div>
           </div>
 
-          {/* Contact Form - REFATORADO */}
+          {/* Contact Form */}
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="p-8 bg-secondary/50 rounded-lg space-y-5">
+            <form onSubmit={form.handleSubmit(onSubmit)} noValidate className="p-8 bg-secondary/50 rounded-lg space-y-5">
               <FormField
                 control={form.control}
                 name="name"

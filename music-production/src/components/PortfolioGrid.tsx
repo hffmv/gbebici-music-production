@@ -35,7 +35,7 @@ const getYouTubeEmbedUrl = (url: string) => {
   const timeMatch = url.match(/[?&]t=(\d+)/);
   const startTime = timeMatch ? timeMatch[1] : null;
   if (videoId) {
-    let embedUrl = `https://www.youtube.com/embed/${videoId}?modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&autoplay=1`;
+    let embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&autoplay=1&enablejsapi=1`;
     if (startTime) {
       embedUrl += `&start=${startTime}`;
     }
@@ -86,7 +86,7 @@ const PortfolioCard = ({
                 <Play className="w-6 h-6 md:w-8 md:h-8 text-primary-foreground ml-1" fill="currentColor" />
               </div>
             </div>
-          </div> : <iframe src={embedUrl} title={track.title} allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full border-0" />}
+          </div> : <iframe src={embedUrl} title={track.title} referrerPolicy="strict-origin-when-cross-origin" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowFullScreen className="w-full h-full border-0" />}
       </div>
       <div className="py-3 md:py-4">
         <h3 className="font-display text-base md:text-xl text-foreground font-extralight">

@@ -4,7 +4,7 @@ const FeaturedProduction = () => {
   // Usar o domínio nocookie ajuda a evitar bloqueios de privacidade/cookies
   const videoId = "QXNZi1xz-_I";
   const startTime = 118;
-  const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?start=${startTime}&modestbranding=1&rel=0`;
+  const embedUrl = `https://www.youtube-nocookie.com/embed/${videoId}?start=${startTime}&modestbranding=1&rel=0&enablejsapi=1`;
 
   return (
     <section className="py-32 px-6">
